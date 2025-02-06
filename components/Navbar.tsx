@@ -7,10 +7,26 @@ import { Menu, X } from 'lucide-react';
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+
+      // Update active section based on scroll position
+      const sections = ['home', 'about', 'achievements', 'team', 'events' ];
+      const current = sections.find(section => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= 100 && rect.bottom >= 100;
+        }
+        return false;
+      });
+
+      if (current) {
+        setActiveSection(current);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -18,12 +34,27 @@ export default function Navbar() {
   }, []);
 
   const navItems = [
-    { name: 'Home', href: '#' },
-    { name: 'About', href: '#' },
-    { name: 'Team', href: '#' },
-    { name: 'Achievements', href: '#' },
-    { name: 'Contact', href: '#' }
+    { name: 'Home', href: '#home' },
+    { name: 'About', href: '#about' },
+    { name: 'Achievements', href: '#achievements' },
+    { name: 'Team', href: '#team' },
+    { name: 'Events', href: '#events' }
   ];
+
+  const scrollToSection = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      const offset = 80; // Height of the fixed navbar
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <>
@@ -41,9 +72,16 @@ export default function Navbar() {
               className="flex-shrink-0"
               whileHover={{ scale: 1.05 }}
             >
-              <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+              <a 
+                href="#home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection('#home');
+                }}
+                className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500"
+              >
                 System Coding Club
-              </span>
+              </a>
             </motion.div>
 
             {/* Desktop Navigation */}
@@ -53,7 +91,15 @@ export default function Navbar() {
                   <motion.a
                     key={item.name}
                     href={item.href}
-                    className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection(item.href);
+                    }}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 ${
+                      activeSection === item.href.substring(1)
+                        ? 'text-blue-400'
+                        : 'text-gray-300 hover:text-white'
+                    }`}
                     whileHover={{ scale: 1.1 }}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -93,9 +139,16 @@ export default function Navbar() {
                   <motion.a
                     key={item.name}
                     href={item.href}
-                    className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection(item.href);
+                    }}
+                    className={`block px-3 py-2 rounded-md text-base font-medium ${
+                      activeSection === item.href.substring(1)
+                        ? 'text-blue-400'
+                        : 'text-gray-300 hover:text-white'
+                    }`}
                     whileHover={{ scale: 1.05, x: 10 }}
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
                   </motion.a>

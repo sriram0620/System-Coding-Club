@@ -44,7 +44,7 @@ export default function Footer() {
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              ElectroCode
+              System Coding Club
             </motion.h3>
             <p className="text-gray-400 mb-4">
               Empowering the next generation of system developers and innovators.
@@ -122,7 +122,7 @@ export default function Footer() {
                 transition={{ delay: 0.1 }}
               >
                 <Mail className="w-5 h-5 flex-shrink-0 text-blue-500" />
-                <span>contact@electrocode.org</span>
+                <span>contact@systemcodingclub.org</span>
               </motion.li>
               <motion.li
                 className="flex items-center space-x-3 text-gray-400"
