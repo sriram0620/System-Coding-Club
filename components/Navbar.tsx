@@ -139,10 +139,7 @@ export default function Navbar() {
                   <motion.a
                     key={item.name}
                     href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection(item.href);
-                    }}
+                    
                     className={`block px-3 py-2 rounded-md text-base font-medium ${
                       activeSection === item.href.substring(1)
                         ? 'text-blue-400'
