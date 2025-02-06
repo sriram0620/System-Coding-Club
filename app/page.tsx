@@ -169,7 +169,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4">
+      <section id="home" className="relative min-h-screen flex items-center justify-center px-4">
         <div className="text-center z-10">
           <motion.h1 
             className="text-6xl md:text-8xl font-bold mb-6 p-5 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
