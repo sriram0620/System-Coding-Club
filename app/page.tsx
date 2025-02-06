@@ -14,61 +14,65 @@ import Footer from '@/components/Footer';
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
-  const statsRef = useRef<HTMLDivElement | null>(null);
-  const introRef = useRef<HTMLDivElement | null>(null);
-  const achievementsRef = useRef<HTMLDivElement | null>(null);
-
+  const statsRef = useRef<HTMLDivElement | null>(null)
+  const introRef = useRef<HTMLDivElement | null>(null)
+  const achievementsRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (!statsRef.current) return; // Ensure ref is not null
-    // Existing animations
-    const stats = statsRef.current.children;
+    if (!statsRef.current) return
+    // Existing animations for stats
+    const stats = statsRef.current.children
     gsap.from(stats, {
       scrollTrigger: {
         trigger: statsRef.current,
-        start: "top center",
-        end: "bottom center",
-        scrub: 1
+        start: "top 80%",
+        end: "bottom 20%",
+        scrub: 1,
       },
       opacity: 0,
-      y: 50,
+      y: 30,
       duration: 1,
-      stagger: 0.2
-    });
+      stagger: 0.2,
+      ease: "power3.out",
+    })
 
     gsap.from(introRef.current, {
       scrollTrigger: {
         trigger: introRef.current,
-        start: "top center",
+        start: "top 80%",
         end: "center center",
-        scrub: 1
+        scrub: 1,
       },
       opacity: 0,
       y: 30,
-      duration: 1
-    });
-
-  if (!achievementsRef.current) return; // Ensure ref is not null before accessing children
-    // New animations for achievements
-    const achievements = achievementsRef.current.children;
-    gsap.from(achievements, {
-      scrollTrigger: {
-        trigger: achievementsRef.current,
-        start: "top 80%",
-        end: "bottom 60%",
-        scrub: 2
-      },
-      opacity: 1,
-      x: 0,
       duration: 1.5,
-      ease: "power2.out", // Smoother easing
-      stagger: 0.2, 
-    });
+      ease: "power3.out",
+    })
 
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, []);
+    if (!achievementsRef.current) return
+
+    const achievements = achievementsRef.current.children
+    gsap.fromTo(
+      achievements,
+      {
+        opacity: 0,
+        y: 50,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: achievementsRef.current,
+          start: "top 80%",
+          end: "bottom 20%",
+          scrub: false,
+        },
+      },
+    )
+  }, [])
 
   const wings = [
     {
@@ -169,7 +173,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex items-center justify-center px-4">
+      <section id="home"className="relative min-h-screen flex items-center justify-center px-4">
         <div className="text-center z-10">
           <motion.h1 
             className="text-6xl md:text-8xl font-bold mb-6 p-5 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
@@ -221,7 +225,7 @@ export default function Home() {
             {wings.map((wing, index) => (
               <motion.div
                 key={wing.name}
-                className="relative bg-gray-900/50 backdrop-blur-sm p-8 rounded-xl border border-blue-500/20 overflow-hidden group"
+                className="relative bg-gray-900/50 backdrop-blur-sm p-8 rounded-xl border border-blue-500/20 hover:border-blue-500/50 overflow-hidden group"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
