@@ -144,7 +144,7 @@ export default function Footer() {
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <p>© 2024 ElectroCode. All rights reserved.</p>
+          <p>© 2025 System-Coding-Club IIITDM. All rights reserved.</p>
         </motion.div>
       </div>
     </footer>
