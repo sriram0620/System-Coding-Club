@@ -3,11 +3,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,24 +37,26 @@ export default function Navbar() {
   }, []);
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Achievements', href: '#achievements' },
-    { name: 'Team', href: '#team' },
-    { name: 'Events', href: '#events' }
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/#about' },
+    { name: 'Achievements', href: '/#achievements' },
+    { name: 'Team', href: '/team' },
+    { name: 'Events', href: '/events' }
   ];
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      const offset = 80; // Height of the fixed navbar
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+    if (href.startsWith('/#')) {
+      const element = document.querySelector(href.substring(1));
+      if (element) {
+        const offset = 80; // Height of the fixed navbar
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
     setIsMobileMenuOpen(false);
   };
@@ -72,41 +77,37 @@ export default function Navbar() {
               className="flex-shrink-0"
               whileHover={{ scale: 1.05 }}
             >
-              <a 
-                href="#home"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection('#home');
-                }}
+              <Link 
+                href="/"
                 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500"
               >
                 System Coding Club
-              </a>
+              </Link>
             </motion.div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
                 {navItems.map((item, index) => (
-                  <motion.a
-                    key={item.name}
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection(item.href);
-                    }}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 ${
-                      activeSection === item.href.substring(1)
-                        ? 'text-blue-400'
-                        : 'text-gray-300 hover:text-white'
-                    }`}
-                    whileHover={{ scale: 1.1 }}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    {item.name}
-                  </motion.a>
+                  <motion.div key={item.name} whileHover={{ scale: 1.1 }}>
+                    <Link
+                      href={item.href}
+                      onClick={(e) => {
+                        if (item.href.includes('#')) {
+                          e.preventDefault();
+                          scrollToSection(item.href);
+                        }
+                      }}
+                      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 ${
+                        (pathname === item.href || 
+                         (pathname === '/' && item.href.includes('#') && activeSection === item.href.split('#')[1])) 
+                          ? 'text-blue-400'
+                          : 'text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -136,19 +137,26 @@ export default function Navbar() {
             >
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-black/90 backdrop-blur-md">
                 {navItems.map((item) => (
-                  <motion.a
-                    key={item.name}
-                    href={item.href}
-                    
-                    className={`block px-3 py-2 rounded-md text-base font-medium ${
-                      activeSection === item.href.substring(1)
-                        ? 'text-blue-400'
-                        : 'text-gray-300 hover:text-white'
-                    }`}
-                    whileHover={{ scale: 1.05, x: 10 }}
-                  >
-                    {item.name}
-                  </motion.a>
+                  <motion.div key={item.name} whileHover={{ scale: 1.05, x: 10 }}>
+                    <Link
+                      href={item.href}
+                      onClick={(e) => {
+                        if (item.href.includes('#')) {
+                          e.preventDefault();
+                          scrollToSection(item.href);
+                        }
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`block px-3 py-2 rounded-md text-base font-medium ${
+                        (pathname === item.href || 
+                         (pathname === '/' && item.href.includes('#') && activeSection === item.href.split('#')[1])) 
+                          ? 'text-blue-400'
+                          : 'text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
